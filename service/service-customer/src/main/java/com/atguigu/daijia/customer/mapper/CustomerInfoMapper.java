@@ -1,0 +1,13 @@
+package com.atguigu.daijia.customer.mapper;
+
+import com.atguigu.daijia.model.entity.customer.CustomerInfo;
+import com.atguigu.daijia.model.vo.customer.CustomerLoginVo;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Mapper;
+
+@Mapper
+public interface CustomerInfoMapper extends BaseMapper<CustomerInfo> {
+
+    void selectOne(LambdaQueryWrapper<CustomerLoginVo> wrapper);
+}

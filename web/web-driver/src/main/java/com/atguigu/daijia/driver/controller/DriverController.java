@@ -1,0 +1,63 @@
+package com.atguigu.daijia.driver.controller;
+
+import com.atguigu.daijia.common.login.LoginDetection;
+import com.atguigu.daijia.common.result.Result;
+import com.atguigu.daijia.common.util.AuthContextHolder;
+import com.atguigu.daijia.driver.service.DriverService;
+import com.atguigu.daijia.model.form.driver.DriverFaceModelForm;
+import com.atguigu.daijia.model.form.driver.UpdateDriverAuthInfoForm;
+import com.atguigu.daijia.model.vo.driver.DriverAuthInfoVo;
+import com.atguigu.daijia.model.vo.driver.DriverLoginVo;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@Slf4j
+@Tag(name = "司机API接口管理")
+@RestController
+@RequestMapping(value="/driver")
+@SuppressWarnings({"unchecked", "rawtypes"})
+public class DriverController {
+
+    @Autowired
+    private DriverService driverService;
+
+    @Operation(summary = "小程序授权登录")
+    @GetMapping("/login/{code}")
+    public Result<String> login(@PathVariable("code") String code) {
+        return Result.ok(driverService.login(code));
+    }
+
+    @Operation(summary = "获取登录司机信息")
+    @LoginDetection
+    @GetMapping("/getDriverLoginInfo")
+    public Result<DriverLoginVo> getDriverLoginInfo() {
+        return Result.ok(driverService.getDriverLoginVo());
+    }
+
+    @Operation(summary = "获取司机认证信息")
+    @LoginDetection
+    @GetMapping("/getDriverAuthInfo")
+    public Result<DriverAuthInfoVo> getDriverAuthInfo() {
+        return Result.ok(driverService.getDriverAuthInfo(AuthContextHolder.getUserId()));
+    }
+
+    @Operation(summary = "更新司机认证信息")
+    @LoginDetection
+    @PostMapping("updateDriverAuthInfo")
+    public Result<Boolean> updateDriverAuthInfo(@RequestBody UpdateDriverAuthInfoForm update) {
+        update.setDriverId(AuthContextHolder.getUserId());
+        return Result.ok(driverService.updateDriverAuthInfo(update));
+    }
+
+    @Operation(summary = "创建司机人脸模型")
+    @LoginDetection
+    @PostMapping("/creatDriverFaceModel")
+    public Result<Boolean> creatDriverFaceModel(@RequestBody DriverFaceModelForm driverFaceModelForm) {
+        driverFaceModelForm.setDriverId(AuthContextHolder.getUserId());
+        return Result.ok(driverService.creatDriverFaceModel(driverFaceModelForm));
+    }
+}
+
