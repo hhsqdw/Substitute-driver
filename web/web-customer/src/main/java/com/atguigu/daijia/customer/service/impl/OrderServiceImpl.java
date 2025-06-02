@@ -2,6 +2,7 @@ package com.atguigu.daijia.customer.service.impl;
 
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.customer.service.OrderService;
+import com.atguigu.daijia.dispatch.client.NewOrderFeignClient;
 import com.atguigu.daijia.map.client.MapFeignClient;
 import com.atguigu.daijia.model.form.customer.ExpectOrderForm;
 import com.atguigu.daijia.model.form.customer.SubmitOrderForm;
@@ -9,6 +10,7 @@ import com.atguigu.daijia.model.form.map.CalculateDrivingLineForm;
 import com.atguigu.daijia.model.form.order.OrderInfoForm;
 import com.atguigu.daijia.model.form.rules.FeeRuleRequestForm;
 import com.atguigu.daijia.model.vo.customer.ExpectOrderVo;
+import com.atguigu.daijia.model.vo.dispatch.NewOrderTaskVo;
 import com.atguigu.daijia.model.vo.map.DrivingLineVo;
 import com.atguigu.daijia.model.vo.rules.FeeRuleResponseVo;
 import com.atguigu.daijia.order.client.OrderInfoFeignClient;
@@ -33,6 +35,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderInfoFeignClient orderInfoFeignClient;
+
+    @Autowired
+    private NewOrderFeignClient newOrderFeignClient;
 
     // 预估订单数据
     @Override
@@ -63,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
     public Long submitOrder(SubmitOrderForm submitOrderForm) {
         //1 重新计算驾驶线路
         CalculateDrivingLineForm calculateDrivingLineForm = new CalculateDrivingLineForm();
-        BeanUtils.copyProperties(submitOrderForm,submitOrderForm);
+        BeanUtils.copyProperties(submitOrderForm,calculateDrivingLineForm);
         Result<DrivingLineVo> drivingLineVoResult = mapFeignClient.calculateDrivingLine(calculateDrivingLineForm);
         DrivingLineVo drivingLineVo = drivingLineVoResult.getData();
 
@@ -83,12 +88,26 @@ public class OrderServiceImpl implements OrderService {
         Result<Long> orderInfoResult = orderInfoFeignClient.saveOrderInfo(orderInfoForm);
         Long orderId = orderInfoResult.getData();
 
-        //TODO 查询附近可以接单司机
+        // 任务调度：查询附近可以接单司机
+        NewOrderTaskVo newOrderTaskVo = new NewOrderTaskVo();
+        newOrderTaskVo.setOrderId(orderId);
+        newOrderTaskVo.setStartLocation(orderInfoForm.getStartLocation());
+        newOrderTaskVo.setStartPointLongitude(orderInfoForm.getStartPointLongitude());
+        newOrderTaskVo.setStartPointLatitude(orderInfoForm.getStartPointLatitude());
+        newOrderTaskVo.setEndLocation(orderInfoForm.getEndLocation());
+        newOrderTaskVo.setEndPointLongitude(orderInfoForm.getEndPointLongitude());
+        newOrderTaskVo.setEndPointLatitude(orderInfoForm.getEndPointLatitude());
+        newOrderTaskVo.setExpectAmount(orderInfoForm.getExpectAmount());
+        newOrderTaskVo.setExpectDistance(orderInfoForm.getExpectDistance());
+        newOrderTaskVo.setExpectTime(drivingLineVo.getDuration());
+        newOrderTaskVo.setFavourFee(orderInfoForm.getFavourFee());
+        newOrderTaskVo.setCreateTime(new Date());
+        Long jobId = newOrderFeignClient.addAndStartTask(newOrderTaskVo).getData();
 
         return orderId;
     }
 
-    // 查询订单状态
+    //查询订单状态
     @Override
     public Integer getOrderStatus(Long orderId) {
         Result<Integer> integerResult = orderInfoFeignClient.getOrderStatus(orderId);

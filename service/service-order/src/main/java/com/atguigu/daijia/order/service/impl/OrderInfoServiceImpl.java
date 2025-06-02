@@ -44,16 +44,17 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return orderInfo.getId();
     }
 
-    // 根据订单id获取订单状态
+    //根据订单id获取订单状态
     @Override
     public Integer getOrderStatus(Long orderId) {
+        //sql语句： select status from order_info where id=?
         LambdaQueryWrapper<OrderInfo> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(OrderInfo::getId, orderId);
+        wrapper.eq(OrderInfo::getId,orderId);
         wrapper.select(OrderInfo::getStatus);
-
+        //调用mapper方法
         OrderInfo orderInfo = orderInfoMapper.selectOne(wrapper);
-
-        if(orderInfo == null){
+        //订单不存在
+        if(orderInfo == null) {
             return OrderStatus.NULL_ORDER.getStatus();
         }
         return orderInfo.getStatus();
