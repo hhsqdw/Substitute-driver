@@ -30,4 +30,7 @@ public interface DriverService {
 
     // 开始接单服务
     Boolean startService(Long driverId);
+
+    // 停止接单服务
+    Boolean stopService(Long driverId);
 }
