@@ -91,6 +91,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         OrderInfo orderInfo = orderInfoMapper.selectOne(wrapper);
         //设置
         orderInfo.setStatus(OrderStatus.ACCEPTED.getStatus());
+        orderInfo.setStatus(OrderStatus.ACCEPTED.getStatus());
         orderInfo.setDriverId(driverId);
         orderInfo.setAcceptTime(new Date());
         //调用方法修改

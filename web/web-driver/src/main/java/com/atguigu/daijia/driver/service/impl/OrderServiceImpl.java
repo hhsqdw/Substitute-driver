@@ -1,5 +1,6 @@
 package com.atguigu.daijia.driver.service.impl;
 
+import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.dispatch.client.NewOrderFeignClient;
 import com.atguigu.daijia.driver.service.OrderService;
 import com.atguigu.daijia.model.vo.order.NewOrderDataVo;
@@ -29,5 +30,12 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<NewOrderDataVo> findNewOrderQueueData(Long driverId) {
         return newOrderFeignClient.findNewOrderQueueData(driverId).getData();
+    }
+
+    // 司机抢单
+    @Override
+    public Boolean robNewOrder(Long driverId, Long orderId) {
+        Result<Boolean> booleanResult = orderInfoFeignClient.robNewOrder(driverId, orderId);
+        return booleanResult.getData();
     }
 }
