@@ -73,4 +73,12 @@ public class OrderController {
         return Result.ok(orderService.calculateDrivingLine(calculateDrivingLineForm));
     }
 
+    @Operation(summary = "司机到达代驾起始地点")
+    @LoginDetection
+    @GetMapping("/driverArriveStartLocation/{orderId}")
+    public Result<Boolean> driverArriveStartLocation(@PathVariable Long orderId) {
+        Long driverId = AuthContextHolder.getUserId();
+        return Result.ok(orderService.driverArriveStartLocation(orderId, driverId));
+    }
+
 }
