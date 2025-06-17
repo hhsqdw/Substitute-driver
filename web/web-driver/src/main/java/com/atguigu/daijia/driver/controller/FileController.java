@@ -4,7 +4,10 @@ import com.atguigu.daijia.common.login.LoginDetection;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.driver.service.CosService;
 import com.atguigu.daijia.driver.service.FileService;
+import com.atguigu.daijia.driver.service.OcrService;
 import com.atguigu.daijia.model.vo.driver.CosUploadVo;
+import com.atguigu.daijia.model.vo.driver.DriverLicenseOcrVo;
+import com.atguigu.daijia.model.vo.driver.IdCardOcrVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,5 +19,18 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("file")
 public class FileController {
 
+    @Autowired
+    private CosService cosService;
+
+    //文件上传接口
+    @Operation(summary = "上传")
+    //@LoginDetection
+    @PostMapping("/upload")
+    public Result<String> upload(@RequestPart("file") MultipartFile file,
+                                      @RequestParam(name = "path",defaultValue = "auth") String path) {
+        CosUploadVo cosUploadVo = cosService.uploadFile(file,path);
+        String showUrl = cosUploadVo.getShowUrl();
+        return Result.ok(showUrl);
+    }
 
 }

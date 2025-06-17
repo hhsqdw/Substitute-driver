@@ -78,6 +78,6 @@ public interface OrderInfoFeignClient {
      * @param updateOrderCartForm
      * @return
      */
-    @PostMapping("/order/info//updateOrderCart")
+    @PostMapping("/order/info/updateOrderCart")
     Result<Boolean> updateOrderCart(@RequestBody UpdateOrderCartForm updateOrderCartForm);
 }

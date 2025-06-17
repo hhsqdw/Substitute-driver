@@ -8,10 +8,12 @@ import com.atguigu.daijia.model.vo.order.CurrentOrderInfoVo;
 import com.atguigu.daijia.order.service.OrderInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+@Slf4j
 @Tag(name = "订单API接口管理")
 @RestController
 @RequestMapping(value="/order/info")
@@ -66,6 +68,7 @@ public class OrderInfoController {
     @Operation(summary = "更新代驾车辆信息")
     @PostMapping("/updateOrderCart")
     public Result<Boolean> updateOrderCart(@RequestBody UpdateOrderCartForm updateOrderCartForm) {
+        log.info("调用service层的更新代驾车辆信息");
         return Result.ok(orderInfoService.updateOrderCart(updateOrderCartForm));
     }
 }

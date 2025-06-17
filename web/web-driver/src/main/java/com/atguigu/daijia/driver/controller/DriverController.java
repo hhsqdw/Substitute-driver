@@ -65,6 +65,7 @@ public class DriverController {
     @GetMapping("/isFaceRecognition")
     Result<Boolean> isFaceRecognition() {
         Long driverId = AuthContextHolder.getUserId();
+        log.info("正在调用人脸识别接口，司机id为:{}", driverId);
         return Result.ok(driverService.isFaceRecognition(driverId));
     }
 
