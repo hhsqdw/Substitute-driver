@@ -3,6 +3,7 @@ package com.atguigu.daijia.order.controller;
 import com.atguigu.daijia.common.result.Result;
 import com.atguigu.daijia.model.entity.order.OrderInfo;
 import com.atguigu.daijia.model.form.order.OrderInfoForm;
+import com.atguigu.daijia.model.form.order.StartDriveForm;
 import com.atguigu.daijia.model.form.order.UpdateOrderCartForm;
 import com.atguigu.daijia.model.vo.order.CurrentOrderInfoVo;
 import com.atguigu.daijia.order.service.OrderInfoService;
@@ -70,6 +71,13 @@ public class OrderInfoController {
     public Result<Boolean> updateOrderCart(@RequestBody UpdateOrderCartForm updateOrderCartForm) {
         log.info("调用service层的更新代驾车辆信息");
         return Result.ok(orderInfoService.updateOrderCart(updateOrderCartForm));
+    }
+
+    @Operation(summary = "开始服务")
+    @PostMapping("/startDrive")
+    public Result<Boolean> startDriver(@RequestBody StartDriveForm startDriveForm) {
+        Boolean flag = orderInfoService.startDriver(startDriveForm);
+        return Result.ok(flag);
     }
 }
 
