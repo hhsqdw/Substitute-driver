@@ -44,4 +44,7 @@ public interface OrderInfoService extends IService<OrderInfo> {
 
     // 获取乘客订单分页列表
     PageVo findCustomerOrderPage(Page<OrderInfo> pageParam, Long customerId);
+
+    // 获取司机订单分页列表
+    PageVo findDriverOrderPage(Page<OrderInfo> pageParam, Long driverId);
 }

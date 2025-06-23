@@ -336,6 +336,13 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         return new PageVo<>(pageInfo.getRecords(),pageInfo.getPages(),pageInfo.getTotal());
     }
 
+    // 获取司机订单分页列表
+    @Override
+    public PageVo findDriverOrderPage(Page<OrderInfo> pageParam, Long driverId) {
+        IPage<OrderListVo> pageInfo =  orderInfoMapper.selectDriverOrderPage(pageParam,driverId);
+        return new PageVo<>(pageInfo.getRecords(),pageInfo.getPages(),pageInfo.getTotal());
+    }
+
     public void log(Long orderId, Integer status) {
         OrderStatusLog orderStatusLog = new OrderStatusLog();
         orderStatusLog.setOrderId(orderId);
