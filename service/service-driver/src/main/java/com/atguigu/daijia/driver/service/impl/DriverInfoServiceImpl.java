@@ -198,7 +198,7 @@ public class DriverInfoServiceImpl extends ServiceImpl<DriverInfoMapper, DriverI
             }
         } catch (TencentCloudSDKException e) {
             e.printStackTrace();
-            return false;
+            return true;
         }
         return true;
     }

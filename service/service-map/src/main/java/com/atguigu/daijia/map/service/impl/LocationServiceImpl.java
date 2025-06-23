@@ -198,12 +198,12 @@ public class LocationServiceImpl implements LocationService {
     // 代驾服务：获取订单服务最后一个位置信息
     @Override
     public OrderServiceLastLocationVo getOrderServiceLastLocation(Long orderId) {
-        //查询MongoDB,查询条件 ：orderId
+        //查询MongoDB
+        //查询条件 ：orderId
         Query query = new Query();
         query.addCriteria(Criteria.where("orderId").is(orderId));
         //根据创建时间降序排列
         query.with(Sort.by(Sort.Order.desc("createTime")));
-        //只取一条数据
         query.limit(1);
 
         OrderServiceLocation orderServiceLocation =

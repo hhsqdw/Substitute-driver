@@ -40,7 +40,7 @@ public class MapServiceImpl implements MapService {
         //封装传递参数
         Map<String,String> map = new HashMap();
         //开始位置
-        // 经纬度：比如 北纬40 东京116
+        // 经纬度：比如 北纬40 东经116
         map.put("from",calculateDrivingLineForm.getStartPointLatitude()+","+calculateDrivingLineForm.getStartPointLongitude());
         //结束位置
         map.put("to",calculateDrivingLineForm.getEndPointLatitude()+","+calculateDrivingLineForm.getEndPointLongitude());
@@ -51,7 +51,7 @@ public class MapServiceImpl implements MapService {
         JSONObject result = restTemplate.getForObject(url, JSONObject.class, map);
         //处理返回结果
         //判断调用是否成功
-        int status = Objects.requireNonNull(result).getIntValue("status");
+        int status = result.getIntValue("status");
         if(status != 0) {//失败
             throw new GuiguException(ResultCodeEnum.MAP_FAIL);
         }
